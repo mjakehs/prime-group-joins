@@ -69,3 +69,14 @@ LEFT JOIN "orders" ON "addresses".id="orders".address_id
 LEFT JOIN "line_items" ON "orders".id="line_items".order_id
 LEFT JOIN "products" ON "products".id="line_items".product_id
 GROUP BY "customers".first_name, "customers".last_name;
+
+--12 get a table that lists customer first + last name and how many orders from the alpha database they have
+SELECT "customers".first_name, "customers".last_name, COUNT(CASE "warehouse".warehouse when 'alpha' then 1 else null end) AS "alpha_orders"
+FROM "customers"
+LEFT JOIN "addresses" ON "customers".id="addresses".customer_id
+LEFT JOIN "orders" ON "addresses".id="orders".address_id
+LEFT JOIN "line_items" ON "orders".id="line_items".order_id
+LEFT JOIN "products" ON "products".id="line_items".product_id
+LEFT JOIN "warehouse_product" ON "products".id="warehouse_product".product_id
+LEFT JOIN "warehouse" ON "warehouse".id="warehouse_product".warehouse_id
+GROUP BY "customers".first_name, "customers".last_name;
